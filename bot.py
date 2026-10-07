@@ -1,4 +1,5 @@
 import os
+import time
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -40,23 +41,41 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    # Recherche du salon d'accueil par nom
     welcome_channel = discord.utils.get(member.guild.text_channels, name="📌-│-welcome") or \
                       discord.utils.get(member.guild.text_channels, name="welcome")
     
     if welcome_channel:
         embed = discord.Embed(
-            title=f"👋 Bienvenue sur le serveur Discord de Canyon Interactive Games, {member.display_name} !",
+            title="👋  BIENVENUE CHEZ CANYON INTERACTIVE",
             description=(
-                f"Ravi de te compter parmi nous {member.mention} !\n\n"
-                "• Prends connaissance des règles dans <#📜-│-rules>\n"
-                "• N'hésite pas à te présenter dans <#👋-│-introduce-yourself>\n"
-                "• Suis les coulisses du développement dans <#🛠️-│-dev-previews>"
+                f"Ravi de te compter parmi nous, {member.mention} !\n\n"
+                "📌 **Pour bien démarrer l'aventure :**\n"
+                "├─> 📜 Prends connaissance du règlement dans <#📜-│-rules>\n"
+                "├─> 👋 Présente-toi à la communauté dans <#👋-│-introduce-yourself>\n"
+                "╰─> 🛠️ Découvre l'avancement de nos projets dans <#🛠️-│-dev-previews>\n\n"
+                "───────────────────────────────────"
             ),
             color=discord.Color.dark_orange()
         )
+        
+        # Ajout des informations pratiques avec icônes
+        embed.add_field(
+            name="👤 Utilisateur",
+            value=f"`{member.name}`",
+            inline=True
+        )
+        embed.add_field(
+            name="⏰ Inscription",
+            value=f"<t:{int(time.time())}:R>",
+            inline=True
+        )
+        
         embed.set_thumbnail(url=member.display_avatar.url)
-        embed.set_footer(text="Canyon Interactive Community", icon_url=member.guild.icon.url if member.guild.icon else None)
+        embed.set_footer(
+            text="Canyon Interactive Community • Enjoy your stay!", 
+            icon_url=member.guild.icon.url if member.guild.icon else None
+        )
+        
         await welcome_channel.send(embed=embed)
 
 # ---------------------------------------------------------
@@ -69,18 +88,23 @@ async def on_member_join(member):
 @app_commands.describe(
     title="Titre de l'annonce",
     message="Contenu de l'annonce",
-    ping_everyone="Mentoinner @everyone ? (True/False)"
+    ping_everyone="Mentionner @everyone ? (True/False)"
 )
 async def announcement(interaction: discord.Interaction, title: str, message: str, ping_everyone: bool = False):
     embed = discord.Embed(
-        title=f"📢 {title}",
-        description=message,
+        title=f"📢  {title.upper()}",
+        description=f"\n{message}\n\n───────────────────────────────────",
         color=discord.Color.gold()
     )
-    embed.set_author(name="Canyon Interactive — Annonce Officielle", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
-    embed.set_footer(text=f"Publié par {interaction.user.display_name}", icon_url=interaction.user.display_avatar.url)
+    embed.set_author(
+        name="CANYON INTERACTIVE — ANNONCE OFFICIELLE", 
+        icon_url=interaction.guild.icon.url if interaction.guild.icon else None
+    )
+    embed.set_footer(
+        text=f"Publié par {interaction.user.display_name} • {time.strftime('%d/%m/%Y à %H:%M')}", 
+        icon_url=interaction.user.display_avatar.url
+    )
 
-    # Trouve le salon studio-announcements
     target_channel = discord.utils.get(interaction.guild.text_channels, name="📢-│-studio-announcements") or interaction.channel
 
     content = "@everyone" if ping_everyone else None
@@ -105,14 +129,19 @@ async def announcement(interaction: discord.Interaction, title: str, message: st
 )
 async def patch(interaction: discord.Interaction, version: str, platform: app_commands.Choice[str], changes: str):
     embed = discord.Embed(
-        title=f"📝 Patch Notes — {version} ({platform.name})",
-        description=changes,
+        title=f"📝  PATCH NOTES — `{version}`",
+        description=f"**Plateforme :** {platform.name}\n\n**Changements & Correctifs :**\n{changes}\n\n───────────────────────────────────",
         color=discord.Color.green()
     )
-    embed.set_author(name="Canyon Interactive — Dev Team", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
-    embed.set_footer(text=f"Déployé par {interaction.user.display_name}", icon_url=interaction.user.display_avatar.url)
+    embed.set_author(
+        name="Canyon Interactive — Dev Team", 
+        icon_url=interaction.guild.icon.url if interaction.guild.icon else None
+    )
+    embed.set_footer(
+        text=f"Déployé par {interaction.user.display_name}", 
+        icon_url=interaction.user.display_avatar.url
+    )
 
-    # Trouve le salon patch-notes
     target_channel = discord.utils.get(interaction.guild.text_channels, name="📝-│-patch-notes") or interaction.channel
 
     await target_channel.send(embed=embed)
@@ -129,15 +158,18 @@ async def patch(interaction: discord.Interaction, version: str, platform: app_co
 )
 async def preview(interaction: discord.Interaction, title: str, description: str, image_url: str = None):
     embed = discord.Embed(
-        title=f"🛠️ Dev Preview : {title}",
-        description=description,
+        title=f"🛠️  DEV PREVIEW — {title}",
+        description=f"\n{description}\n\n───────────────────────────────────",
         color=discord.Color.purple()
     )
     if image_url:
         embed.set_image(url=image_url)
-    embed.set_footer(text="Canyon Labs • Work in Progress")
+        
+    embed.set_footer(
+        text="Canyon Labs • Work in Progress",
+        icon_url=interaction.guild.icon.url if interaction.guild.icon else None
+    )
 
-    # Trouve le salon dev-previews
     target_channel = discord.utils.get(interaction.guild.text_channels, name="🛠️-│-dev-previews") or interaction.channel
 
     await target_channel.send(embed=embed)
@@ -159,31 +191,46 @@ async def admin_error(interaction: discord.Interaction, error: app_commands.AppC
 @bot.tree.command(name="studio", description="Découvre l'histoire et la vision de Canyon Interactive.")
 async def studio(interaction: discord.Interaction):
     embed = discord.Embed(
-        title="🏔️ Canyon Interactive",
+        title="🏔️  CANYON INTERACTIVE",
         description=(
-            "**Bienvenue chez Canyon Interactive !**\n\n"
-            "**Notre Histoire :**\n"
-            "Fondé par une équipe de passionnés, Canyon Interactive est un studio indépendant dédié à la création d'expériences de jeu innovantes, immersives et multiplateformes (PC, Console, Roblox & Mobile).\n\n"
-            "**Notre Philosophie :**\n"
-            "Proposer un gamedev transparent, proche de sa communauté, avec des mises à jour régulières et à l'écoute des retours joueurs !"
+            "👋 **Bienvenue chez Canyon Interactive !**\n\n"
+            "📖 **Notre Histoire**\n"
+            "> Fondé par une équipe de passionnés, Canyon Interactive est un studio indépendant dédié à la création d'expériences de jeu innovantes, immersives et multiplateformes (*PC, Console, Roblox & Mobile*).\n\n"
+            "🎯 **Notre Philosophie**\n"
+            "> Proposer un gamedev transparent, proche de sa communauté, avec des mises à jour régulières et à l'écoute des retours joueurs !"
         ),
         color=discord.Color.dark_orange()
     )
-    embed.add_field(name="🔗 Rejoindre la communauté", value="https://discord.gg/9HzQWdYy5c", inline=False)
-    embed.set_footer(text="Canyon Interactive Games", icon_url=bot.user.display_avatar.url)
+    
+    embed.add_field(
+        name="🔗  Rejoindre la communauté", 
+        value="[Cliquez ici pour inviter des amis](https://discord.gg/9HzQWdYy5c)", 
+        inline=False
+    )
+    
+    embed.set_thumbnail(url=bot.user.display_avatar.url)
+    embed.set_footer(text="Canyon Interactive Games • Official Studio Bot", icon_url=bot.user.display_avatar.url)
     await interaction.response.send_message(embed=embed)
 
 
 @bot.tree.command(name="socials", description="Affiche les réseaux sociaux officiels du studio.")
 async def socials(interaction: discord.Interaction):
     embed = discord.Embed(
-        title="🌐 Réseaux Sociaux & Liens Officiels",
-        description="Retrouvez Canyon Interactive partout sur le web :",
+        title="🌐  RÉSEAUX SOCIAUX & LIENS OFFICIELS",
+        description="Retrouvez Canyon Interactive sur l'ensemble de nos plateformes officielles :\n\n",
         color=discord.Color.blue()
     )
-    embed.add_field(name="💬 Discord Officiel", value="https://discord.gg/9HzQWdYy5c", inline=False)
-    # Tu pourras ajouter ici d'autres liens (Twitter/X, Roblox Group, YouTube, etc.)
-    embed.set_footer(text="Canyon Interactive")
+    
+    embed.add_field(
+        name="💬 Discord Officiel", 
+        value="[Rejoindre le serveur](https://discord.gg/9HzQWdYy5c)", 
+        inline=True
+    )
+    # Exemples d'ajouts de réseaux supplémentaires :
+    # embed.add_field(name="🎮 Groupe Roblox", value="[Rejoindre](https://roblox.com)", inline=True)
+    # embed.add_field(name="🐦 Twitter / X", value="[Suivre](https://x.com)", inline=True)
+    
+    embed.set_footer(text="Canyon Interactive Games", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
     await interaction.response.send_message(embed=embed)
 
 bot.run(TOKEN)
