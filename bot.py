@@ -30,7 +30,7 @@ async def on_ready():
     await bot.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.watching, 
-            name="Canyon Interactive Games | /studio"
+            name="Canyon Interactive Games"
         )
     )
 
@@ -46,7 +46,7 @@ async def on_member_join(member):
     
     if welcome_channel:
         embed = discord.Embed(
-            title=f"👋 Bienvenue chez Canyon Interactive, {member.display_name} !",
+            title=f"👋 Bienvenue sur le serveur Discord de Canyon Interactive Games, {member.display_name} !",
             description=(
                 f"Ravi de te compter parmi nous {member.mention} !\n\n"
                 "• Prends connaissance des règles dans <#📜-│-rules>\n"
