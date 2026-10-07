@@ -109,7 +109,7 @@ async def patch(interaction: discord.Interaction, version: str, platform: app_co
         description=changes,
         color=discord.Color.green()
     )
-    embed.set_author(name="Canyon Interactive Dev Team", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
+    embed.set_author(name="Canyon Interactive — Dev Team", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
     embed.set_footer(text=f"Déployé par {interaction.user.display_name}", icon_url=interaction.user.display_avatar.url)
 
     # Trouve le salon patch-notes
