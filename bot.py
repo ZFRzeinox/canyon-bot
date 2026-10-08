@@ -121,14 +121,21 @@ async def announcement(interaction: discord.Interaction, title: str, message: st
     app_commands.Choice(name="🌐 Global / Studio", value="Global")
 ])
 @app_commands.describe(
+    game_name="Nom du jeu ou de l'application",
     version="Ex: v1.0.2",
     platform="Plateforme concernée",
     changes="Détails des changements / correctifs"
 )
-async def patch(interaction: discord.Interaction, version: str, platform: app_commands.Choice[str], changes: str):
+async def patch(interaction: discord.Interaction, game_name: str, version: str, platform: app_commands.Choice[str], changes: str):
     embed = discord.Embed(
-        title=f"📝  PATCH NOTES — `{version}`",
-        description=f"**Plateforme :** {platform.name}\n\n**Changements & Correctifs :**\n{changes}\n\n───────────────────────────────────",
+        title=f"📝  PATCH NOTES — `{game_name}`",
+        description=(
+            f"📌 **Jeu / Projet :** `{game_name}`\n"
+            f"🏷️ **Version :** `{version}`\n"
+            f"💻 **Plateforme :** {platform.name}\n\n"
+            f"📋 **Changements & Correctifs :**\n{changes}\n\n"
+            "───────────────────────────────────"
+        ),
         color=discord.Color.green()
     )
     embed.set_author(
@@ -143,7 +150,7 @@ async def patch(interaction: discord.Interaction, version: str, platform: app_co
     target_channel = discord.utils.get(interaction.guild.text_channels, name="📝-│-patch-notes") or interaction.channel
 
     await target_channel.send(embed=embed)
-    await interaction.response.send_message(f"✅ Patch notes publiés dans {target_channel.mention} !", ephemeral=True)
+    await interaction.response.send_message(f"✅ Patch notes publiés pour **{game_name}** dans {target_channel.mention} !", ephemeral=True)
 
 
 # 3. Commande Dev Preview / Sneak Peek
