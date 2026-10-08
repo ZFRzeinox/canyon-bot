@@ -49,9 +49,8 @@ async def on_member_join(member):
             description=(
                 f"Ravi de te compter parmi nous, {member.mention} !\n\n"
                 "📌 **Pour bien démarrer l'aventure :**\n"
-                "├─> 📜 Prends connaissance du règlement dans <#📜-│-rules>\n"
-                "├─> 👋 Présente-toi à la communauté dans <#👋-│-introduce-yourself>\n"
-                "╰─> 🛠️ Découvre l'avancement de nos projets dans <#🛠️-│-dev-previews>\n\n"
+                "├─> Prends connaissance du règlement dans https://discord.com/channels/1555206389444517898/1557153925461708810\n"
+                "╰─> Découvre l'avancement nos projets\n\n"
                 "───────────────────────────────────"
             ),
             color=discord.Color.dark_orange()
