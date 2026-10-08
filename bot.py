@@ -48,9 +48,9 @@ async def on_member_join(member):
             title="👋  BIENVENUE CHEZ CANYON INTERACTIVE",
             description=(
                 f"Ravi de te compter parmi nous, {member.mention} !\n\n"
-                "📌 **Pour bien démarrer l'aventure :**\n"
+                "📌 **Pour bien démarrer sur le serveur :**\n"
                 "├─> Prends connaissance du règlement dans https://discord.com/channels/1555206389444517898/1557153925461708810\n"
-                "╰─> Découvre l'avancement nos projets\n\n"
+                "╰─> Découvre nos projets\n\n"
                 "───────────────────────────────────"
             ),
             color=discord.Color.dark_orange()
