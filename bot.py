@@ -41,8 +41,7 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    welcome_channel = discord.utils.get(member.guild.text_channels, name="📌-│-welcome") or \
-                      discord.utils.get(member.guild.text_channels, name="welcome")
+    welcome_channel = member.guild.get_channel(1557153171481301104)
     
     if welcome_channel:
         embed = discord.Embed(
